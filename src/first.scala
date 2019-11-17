@@ -1,5 +1,6 @@
 object first {
   def main(args: Array[String]): Unit = {
-    println("hello")
+    var a: Int = 1 + 2
+    println(a)
   }
 }
