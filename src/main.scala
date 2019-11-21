@@ -1,4 +1,4 @@
-object first {
+object main {
   def main(args: Array[String]): Unit = {
     // val  var
     var a: Int = 1 + 2
@@ -31,17 +31,17 @@ object first {
 
 
     // 读文件
-    import java.io.PrintWriter //这行是Scala解释器执行上面语句后返回的结果
-    val out = new PrintWriter("/tmp/write.file")
-    for (i <- 1 to 5) out.println(i)
-    // 必须要执行out.close()语句，才会看到output.txt文件被生成，如果没有执行out.close()语句，我们就无法看到生成的output.txt文件
-    out.close()
+//    import java.io.PrintWriter //这行是Scala解释器执行上面语句后返回的结果
+//    val out = new PrintWriter("/tmp/write.file")
+//    for (i <- 1 to 5) out.println(i)
+//    // 必须要执行out.close()语句，才会看到output.txt文件被生成，如果没有执行out.close()语句，我们就无法看到生成的output.txt文件
+//    out.close()
 
     // 读取文本文件中的行
-    import scala.io.Source
-    val inputFile = Source.fromFile("/tmp/write.file")
-    val lines = inputFile.getLines //返回的结果是一个迭代器
-    for (line <- lines) println(line)
+//    import scala.io.Source
+//    val inputFile = Source.fromFile("/tmp/write.file")
+//    val lines = inputFile.getLines //返回的结果是一个迭代器
+//    for (line <- lines) println(line)
 
     // if
     val x = 6
@@ -186,5 +186,107 @@ object first {
     for (elem <- iter) {
       println(elem)
     }
+
+
+    // 类
+    val myCounter = new Counter
+    println(myCounter.value)  //打印value的初始值
+    myCounter.value = 3 //为value设置新的值
+    println(myCounter.value)  //打印value的新值
+    myCounter.increment(1) //这里设置步长为1，每次增加1
+    println(myCounter.current)
+
+    // 构造函数
+    val myCounter1 = new Construct  //主构造器
+    val myCounter2 = new Construct("Runner") //第一个辅助构造器，计数器的名称设置为Runner，用来计算跑步步数
+    val myCounter3 = new Construct("Timer",2) //第二个辅助构造器，计数器的名称设置为Timer，用来计算秒数
+    myCounter1.info  //显示计数器信息
+    myCounter1.increment(1)     //设置步长
+    printf("Current Value is: %d\n",myCounter1.current) //显示计数器当前值
+    myCounter2.info  //显示计数器信息
+    myCounter2.increment(2)     //设置步长
+    printf("Current Value is: %d\n",myCounter2.current) //显示计数器当前值
+    myCounter3.info  //显示计数器信息
+    myCounter3.increment(3)     //设置步长
+    printf("Current Value is: %d\n",myCounter3.current) //显示计数器当前值
+
+    // 单例对象
+    printf("The first person id is %d.\n",SingleCase.newPersonId())
+    printf("The second person id is %d.\n",SingleCase.newPersonId())
+    printf("The third person id is %d.\n",SingleCase.newPersonId())
+
+
+    // apply update 方法
+    val myObject = new TestApplyClass
+    println(myObject("param1"))
+
+
+    // 继承
+    val myCar1 = new BMWCar()
+    myCar1.greeting()
+    myCar1.info()
+
+    // trait
+    val myCarId2 = new BMWCarId()
+    printf("My second CarId is %d.\n",myCarId2.currentId)
+    myCarId2.greeting("BMW")
+
+    // 模式匹配
+    val colorNum = 1
+    val colorStr = colorNum match {
+      case 1 => "red"
+      case 2 => "green"
+      case 3 => "yellow"
+      case _ => "Not Allowed"
+    }
+    println(colorStr)
+    // 类型模式匹配
+    for (elem <- List(9,12.3,"Spark","Hadoop",'Hello)){
+      val str  = elem match{
+        case i: Int => i + " is an int value."
+        case d: Double => d + " is a double value."
+        case "Spark"=> "Spark is found."
+        case s: String => s + " is a string value."
+        case _ => "This is an unexpected value."
+      }
+      println(str)
+    }
+
+    // guard 语句
+    for (elem <- List(1,2,3,4)){
+      elem match {
+        case _ if (elem %2 == 0) => println(elem + " is even.")
+        case _ => println(elem + " is odd.")
+      }
+    }
+
+    // case 类模式匹配
+    case class Car(brand: String, price: Int)
+    val myBYDCar = new Car("BYD", 89000)
+    val myBMWCar = new Car("BMW", 1200000)
+    val myBenzCar = new Car("Benz", 1500000)
+    for (car <- List(myBYDCar, myBMWCar, myBenzCar)) {
+      car match{
+        case Car("BYD", 89000) => println("Hello, BYD!")
+        case Car("BMW", 1200000) => println("Hello, BMW!")
+        case Car(brand, price) => println("Brand:"+ brand +", Price:"+price+", do you want it?")
+      }
+    }
+
+
+    // 函数 函数就是一个变量：有类型 有值
+    def counter(value: Int): Boolean = { value >= 1} // 函数的类型 (Int) => Int
+    val counters: Int => Boolean = { (value) => value > 1 }
+
+    // Lambda表达式
+    val myNumFunc: Int=>Int = (num: Int) => num * 2
+    println(myNumFunc(3))
+
+    // 闭包
+    def plusStep(step: Int) = (num: Int) => num + step
+    //给step赋值
+    val myFunc = plusStep(3)
+    //调用myFunc函数
+    println(myFunc(10))
   }
 }
