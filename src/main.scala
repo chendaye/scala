@@ -288,5 +288,91 @@ object main {
     val myFunc = plusStep(3)
     //调用myFunc函数
     println(myFunc(10))
+
+
+    // 高阶函数
+//    def sumInts(a: Int, b: Int): Int = {
+//      if(a > b) 0 else a + sumInts(a + 1, b)
+//    }
+
+    //定义了一个新的函数sum，以函数f为参数 sum是一个接受函数参数的函数，因此，是一个高阶函数 (Int=>Int, Int, Int) => Int
+    def sum(f: Int => Int, a: Int, b: Int): Int ={
+      if(a > b) 0 else f(a) + sum(f, a+1, b)
+    }
+    //定义了一个新的函数self，该函数的输入是一个整数x，然后直接输出x自身
+    def self(x: Int): Int = x
+    //重新定义sumInts函数
+    def sumInts2(a: Int, b: Int): Int = sum(self, a, b)
+
+    // 高阶函数代码重用
+    def sum3(f: Int => Int, a: Int, b: Int): Int = {
+      if(a > b) 0 else f(a) + sum3(f, a+1, b)
+    }
+
+    def self3(x: Int): Int = x
+    def square(x: Int): Int = x * x
+    def powerOfTwo(x: Int): Int = if(x == 0) 1 else 2 * powerOfTwo(x-1)
+
+    def sumInts(a: Int, b: Int): Int = sum3(self3, a, b)
+    def sumSquared(a: Int, b: Int): Int = sum3(square, a, b)
+    def sumPowersOfTwo(a: Int, b: Int): Int = sum3(powerOfTwo, a, b)
+    println(sumInts2(1,5))
+    println(sumSquared(1,5))
+    println(sumPowersOfTwo(1,5))
+
+    // 占位符
+    val numList = List(-3, -5, 1, 6, 9)
+    numList.filter(x => x > 0 )
+    numList.filter(_ > 0)
+
+
+    // 列表循环
+    val list = List(1, 2, 3, 4, 5)
+    for (elem <- list) println(elem)
+
+    val list1 = List(1, 2, 3, 4, 5)
+    list1.foreach(elem => println(elem)) //本行语句甚至可以简写为list.foreach(println)，或者写成：list foreach println
+
+    // 映射
+    // 不可变映射
+    val university66 = Map("XMU" -> "Xiamen University", "THU" -> "Tsinghua University","PKU"->"Peking University")
+    for ((k,v) <- university66) printf("Code is : %s and name is: %s\n",k,v)
+    // 键值
+    for (k<-university66.keys) println(k)
+    // 值
+    for (v<-university66.values) println(v)
+
+    // forearch
+    university66 foreach {case(k,v) => println(k+":"+v)} //或者写成：university.foreach
+
+    university66 foreach {kv => println(kv._1+":"+kv._2)}
+
+    // map
+    val books = List("Hadoop", "Hive", "HDFS")
+    books.map(s => s.toUpperCase) // 参数是 Lamda表达式 也就是匿名函数
+    println(books)
+    // flatMap
+    val books2 = List("Hadoop","Hive","HDFS")
+    books2 flatMap (s => s.toList) // books中的每个元素都调用toList，生成List[Char]，最终，多个Char的集合被“拍扁”成一个集合
+    println(books2)
+
+    // filter
+    // 用filter操作过滤得到那些学校名称中包含“Xiamen”的元素
+    val universityOfXiamen = university filter {kv => kv._2 contains "Xiamen"}
+    universityOfXiamen.foreach {kv => println(kv._1+":"+kv._2)}
+
+    // reduce
+    val list8 = List(1,2,3,4,5)
+    val reduce = list8.reduce(_ - _)
+    val reduceLeft =list8.reduceLeft(_ + _)
+    val reduceRight = list8.reduceRight(_ + _)
+    println(reduce)
+    println(reduceLeft)
+    println(reduceRight)
+
+    // fold
+    val list9 = List(1,2,3,4,5)
+    val fold = list9.fold(6)(_*_)
+    println(fold)
   }
 }
